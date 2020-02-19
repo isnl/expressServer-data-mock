@@ -1,5 +1,6 @@
 var express = require("express");
 const request = require("request");
+const fs = require("fs");
 var router = express.Router();
 
 //跨域请求头   *为允许所有域名  上线请自行修改
@@ -32,7 +33,17 @@ router.get("/video", (req, res, next) => {
         }
       })
       .on("response", function(response) {
-        this.pipe(res);
+        // this.pipe(res);
+        res.set({
+          "Content-type": "application/octet-stream",
+          "Content-Disposition":
+            "attachment;filename=" + new Date().getTime() + ".mp4"
+        });
+        // fReadStream = fs.createReadStream(response);
+        response.on("data", chunk => res.write(chunk, "binary"));
+        response.on("end", function() {
+          res.end();
+        });
       });
   } catch (error) {
     res.json({
