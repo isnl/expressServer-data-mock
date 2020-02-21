@@ -14,5 +14,8 @@
     "morgan": "~1.9.1",
     "nodemon": "^1.19.1",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "jssha": "^2.3.1"
   }
 }
