@@ -21,7 +21,7 @@ router.get("/", function(req, res, next) {
     name: "candy"
   });
 });
-router.get("/video", (req, res, next) => {
+router.get("/douyin", (req, res, next) => {
   const queryUrl = req.query.url;
   try {
     request
@@ -35,25 +35,37 @@ router.get("/video", (req, res, next) => {
       .on("response", function(response) {
         const fileName = new Date().getTime() + ".mp4";
         const filePath = "./public/video/" + fileName;
-        res.set({
-          "Content-type": "application/octet-stream",
-          "Content-Disposition":
-            "attachment;filename=" + new Date().getTime() + ".mp4"
-        });
-        // fReadStream = fs.createReadStream(response);
+        // res.set({
+        //   "Content-type": "application/octet-stream",
+        //   "Content-Disposition":
+        //     "attachment;filename=" + new Date().getTime() + ".mp4"
+        // });
         const writeStream = fs.createWriteStream(filePath);
         const reader = this.pipe(writeStream);
         reader.on("close", () => {
-          res.download(filePath, fileName, err => {
-            if (!err) {
-              console.log("下载成功");
-              fs.unlink(filePath, er => {
-                if (!er) {
-                  console.log("删除成功");
-                }
-              });
-            }
+          setTimeout(() => {
+            fs.unlink(filePath, er => {
+              if (!er) {
+                console.log("删除成功");
+              }
+            });
+          }, 1000 * 60 * 5);
+          res.json({
+            url: `https://express.iiter.cn/video/${fileName}`
           });
+          // res.download(filePath, fileName, err => {
+          //   if (!err) {
+          //     console.log("下载成功");
+          //     //5分钟后删除此链接
+          //     setTimeout(() => {
+          //       fs.unlink(filePath, er => {
+          //         if (!er) {
+          //           console.log("删除成功");
+          //         }
+          //       });
+          //     }, 1000 * 60 * 5);
+          //   }
+          // });
         });
         // res.download(filePath, fileName, err => {
         //   if (!err) {
@@ -66,6 +78,9 @@ router.get("/video", (req, res, next) => {
         // response.on("end", function() {
         //   res.end();
         // });
+
+        //直接返回
+        // this.pipe(res);
       });
   } catch (error) {
     res.json({
