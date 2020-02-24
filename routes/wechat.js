@@ -1,9 +1,13 @@
-var express = require("express");
-var router = express.Router();
-const jsSHA = require('jssha');
-/* GET users listing. */
+const express = require("express");
+const router = express.Router();
+const jsSHA = require("jssha");
+const { parseString } = require("xml2js");
+const keywords = require("../data/keyword");
+/**
+ * 授权验证
+ */
 router.get("/", function(req, res, next) {
-  var token = "peanut_wechat_token_express";
+  const token = "peanut_wechat_token_express";
   //1.获取微信服务器Get请求的参数 signature、timestamp、nonce、echostr
   var signature = req.query.signature, //微信加密签名
     timestamp = req.query.timestamp, //时间戳
@@ -28,6 +32,51 @@ router.get("/", function(req, res, next) {
     console.log("验证失败");
     res.send("验证失败");
   }
+});
+/**
+ * 回复文字消息
+ * @param {*} toUser
+ * @param {*} fromUser
+ * @param {*} content
+ */
+function textMsg(toUser, fromUser, content) {
+  var resultXml = "<xml><ToUserName><![CDATA[" + fromUser + "]]></ToUserName>";
+  resultXml += "<FromUserName><![CDATA[" + toUser + "]]></FromUserName>";
+  resultXml += "<CreateTime>" + new Date().getTime() + "</CreateTime>";
+  resultXml += "<MsgType><![CDATA[text]]></MsgType>";
+  resultXml += "<Content><![CDATA[" + content + "]]></Content></xml>";
+  return resultXml;
+}
+router.post("/", function(req, res) {
+  var buffer = [];
+  req.on("data", function(data) {
+    buffer.push(data);
+  });
+  // 内容接收完毕
+  req.on("end", function() {
+    var msgXml = Buffer.concat(buffer).toString("utf-8");
+    parseString(msgXml, { explicitArray: false }, function(err, result) {
+      if (err) throw err;
+      result = result.xml;
+      // console.log(result);
+      const toUser = result.ToUserName;
+      const fromUser = result.FromUserName;
+      //回复普通消息
+      if (result.MsgType === "text") {
+        const content = result.Content;
+        let keywordXml = "不支持当前关键字\n请回复菜单，获取关键字列表";
+        keywords.forEach(item => {
+          if (content === item.name) {
+            keywordXml = item.xml;
+          }
+        });
+        const sendXml = textMsg(toUser, fromUser, keywordXml);
+        res.send(sendXml);
+      } else if (result.MsgType === "image") {
+        //回复图片
+      }
+    });
+  });
 });
 
 module.exports = router;
