@@ -5,7 +5,7 @@ module.exports = [
   },
   {
     name: "菜单",
-    xml: `关键字列表(请回复中文关键字)\n1.海豚影视\n一款有温度的影视APP\n2.坏坏猫\n免费小说、漫画检索工具\n3.QMD\n付费无损音乐下载器\n4.WPS\nWPS2019专业版永久激活码\n5.人人美剧\n人人美剧App绿化版\n6.数据恢复\n19款专业数据恢复软件`
+    xml: `关键字列表(请回复中文关键字)\n1.海豚影视\n一款有温度的影视APP\n2.坏坏猫\n免费小说、漫画检索工具\n3.QMD\n付费无损音乐下载器\n4.WPS\nWPS2019专业版永久激活码\n5.人人美剧\n人人美剧App绿化版\n6.数据恢复\n19款专业数据恢复软件\n7.博说\n多国语言学习APP，高级版\n8.扫描王\n免费不限次的手机扫描软件`
   },
   {
     name: "海豚影视",
@@ -24,11 +24,19 @@ module.exports = [
     xml: `WPS-2019专业版永久激活码(序列号)\n694BF-YUDBG-EAR69-BPRGB-ATQXH\n下载地址：\nhttps://pc.wps.cn/`
   },
   {
-    name:"人人美剧",
-    xml:`人人美剧绿化版\n蓝奏网盘： https://www.lanzous.com/i9uh42h\n百度网盘： https://pan.baidu.com/s/1m5O0XKQQDdPzrQdJjq83Jg\n提取码：sak6`
+    name: "人人美剧",
+    xml: `人人美剧绿化版\n蓝奏网盘： https://www.lanzous.com/i9uh42h\n百度网盘： https://pan.baidu.com/s/1m5O0XKQQDdPzrQdJjq83Jg\n提取码：sak6`
   },
   {
-    name:"数据恢复",
-    xml:`数据恢复软件合集\n百度网盘：https://pan.baidu.com/s/1rysbrCY0O0YogyZpd82Qpg\n提取码：jx4f`
+    name: "数据恢复",
+    xml: `数据恢复软件合集\n百度网盘：https://pan.baidu.com/s/1rysbrCY0O0YogyZpd82Qpg\n提取码：jx4f`
+  },
+  {
+    name: "博说",
+    xml: `多国语言学习APP，高级版\n蓝奏网盘：https://www.lanzous.com/iaaassb\n百度网盘：https://pan.baidu.com/s/1TK8e6b31j4QnNxhdM2E4xw \n提取码：w8ch`
+  },
+  {
+    name: "扫描王",
+    xml: `免费不限次的手机扫描软件\n蓝奏网盘：https://www.lanzous.com/ian7g5g\n百度网盘：https://pan.baidu.com/s/1SA3tY_RFJ90KYcA7QRAQ8A \n提取码：6iaw`
   }
 ];
