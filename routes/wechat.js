@@ -75,13 +75,9 @@ router.post("/", function (req, res) {
         const content = result.Content;
         let keywordXml =
           "未找到当前关键字对应的数据，按类别可发送如下关键字：\n【前端】\n【资源】\n【小编微信】";
-        let media_id;
         keywords.forEach(item => {
           if (content === item.name) {
             keywordXml = item.xml;
-            if (Reflect.has(item, "media_id")) {
-              media_id = item.media_id;
-            }
           }
         });
         const sendXml = textMsg(toUser, fromUser, keywordXml);
