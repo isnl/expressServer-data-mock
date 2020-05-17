@@ -6,7 +6,7 @@ const keywords = require("../data/keyword");
 /**
  * 授权验证
  */
-router.get("/", function(req, res, next) {
+router.get("/", function (req, res, next) {
   const token = "peanut_wechat_token_express";
   //1.获取微信服务器Get请求的参数 signature、timestamp、nonce、echostr
   var signature = req.query.signature, //微信加密签名
@@ -35,27 +35,36 @@ router.get("/", function(req, res, next) {
 });
 /**
  * 回复文字消息
- * @param {*} toUser
- * @param {*} fromUser
- * @param {*} content
  */
 function textMsg(toUser, fromUser, content) {
-  var resultXml = "<xml><ToUserName><![CDATA[" + fromUser + "]]></ToUserName>";
+  let resultXml = "<xml><ToUserName><![CDATA[" + fromUser + "]]></ToUserName>";
   resultXml += "<FromUserName><![CDATA[" + toUser + "]]></FromUserName>";
   resultXml += "<CreateTime>" + new Date().getTime() + "</CreateTime>";
   resultXml += "<MsgType><![CDATA[text]]></MsgType>";
   resultXml += "<Content><![CDATA[" + content + "]]></Content></xml>";
   return resultXml;
 }
-router.post("/", function(req, res) {
+/**
+ * 回复图片消息
+ */
+function imgMsg(toUser, fromUser, media_id) {
+  let xmlContent = "<xml><ToUserName><![CDATA[" + toUser + "]]></ToUserName>";
+  xmlContent += "<FromUserName><![CDATA[" + fromUser + "]]></FromUserName>";
+  xmlContent += "<CreateTime>" + new Date().getTime() + "</CreateTime>";
+  xmlContent += "<MsgType><![CDATA[image]]></MsgType>";
+  xmlContent +=
+    "<Image><MediaId><![CDATA[" + media_id + "]]></MediaId></Image></xml>";
+  return xmlContent;
+}
+router.post("/", function (req, res) {
   var buffer = [];
-  req.on("data", function(data) {
+  req.on("data", function (data) {
     buffer.push(data);
   });
   // 内容接收完毕
-  req.on("end", function() {
+  req.on("end", function () {
     var msgXml = Buffer.concat(buffer).toString("utf-8");
-    parseString(msgXml, { explicitArray: false }, function(err, result) {
+    parseString(msgXml, { explicitArray: false }, function (err, result) {
       if (err) throw err;
       result = result.xml;
       // console.log(result);
@@ -64,10 +73,15 @@ router.post("/", function(req, res) {
       //回复普通消息
       if (result.MsgType === "text") {
         const content = result.Content;
-        let keywordXml = "不支持当前关键字\n请回复菜单，获取关键字列表";
+        let keywordXml =
+          "未找到当前关键字对应的数据，按类别可发送如下关键字：\n【前端】\n【资源】\n【小编微信】";
+        let media_id;
         keywords.forEach(item => {
           if (content === item.name) {
             keywordXml = item.xml;
+            if (Reflect.has(item, "media_id")) {
+              media_id = item.media_id;
+            }
           }
         });
         const sendXml = textMsg(toUser, fromUser, keywordXml);
